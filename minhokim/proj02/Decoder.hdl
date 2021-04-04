@@ -1,0 +1,12 @@
+/** 
+ * Decoder. out={0,1} if in==0, out={1,0} if in==1
+ */
+
+CHIP Decoder {
+    IN in;
+    OUT out[2];
+
+    PARTS:
+    if in=1 then out=01;
+    if in=0 then out=10;
+}
