@@ -1,0 +1,49 @@
+// Modified by Minho Kim (15 Oct 2014)
+
+/** 
+ * Encoder16. out=0000 if in==0000 0000 0000 0001,
+ *            out=0001 if in==0000 0000 0000 0010,
+ *            out=0010 if in==0000 0000 0000 0100,
+ *            out=0011 if in==0000 0000 0000 1000,
+ *                           :
+ *                           :
+ *            out=1111 if in==1000 0000 0000 0000,
+ */
+
+CHIP Encoder16 {
+    IN in[16];
+    OUT out[4];
+
+    PARTS:
+
+    // Logic for Out[0]
+    Or(a=in[1], b=in[5], out=Or15);
+    Or(a=in[3], b=in[11], out=Or311);
+    Or(a=in[9], b=in[13], out=Or913);
+    Or(a=in[7], b=in[15], out=Or715);
+    Or(a=Or15, b=Or311, out=Out0Left);
+    Or(a=Or913, b=Or715, out=Out0Right);
+    Or(a=Out0Left, b=Out0Right, out=out[0]);
+
+    // Logic for Out[1]
+    Or(a=in[2], b=in[10], out=Or210);
+    Or(a=in[6], b=in[14], out=Or614);
+    Or(a=Or210, b=Or311, out=Or1Left);
+    Or(a=Or614, b=Or715, out=Or1Right);
+    Or(a=Or1Left, b=Or1Right, out=out[1]);
+
+    // Logic for Out[2]
+    Or(a=in[4], b=in[5], out=Or45);
+    Or(a=in[12], b=in[13], out=Or1213);
+    Or(a=Or45, b=Or614, out=Or2Left);
+    Or(a=Or715, b=Or1213, out=Or2Right);
+    Or(a=Or2Left, b=Or2Right, out=out[2]);
+
+    // Logic for Out[3]
+    Or(a=in[8], b=in[9], out=Or89);
+    Or(a=in[10], b=in[11], out=Or1011);
+    Or(a=in[14], b=in[15], out=Or1415);
+    Or(a=Or89, b=Or1011, out=Or3Left);
+    Or(a=Or1213, b=Or1415, out=Or3Right);
+    Or(a=Or3Left, b=Or3Right, out=out[3]);
+}
