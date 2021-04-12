@@ -1,0 +1,104 @@
+// Modified by Minho Kim (15 Oct 2014)
+
+/** 
+ * Decoder7Seg.
+ */
+
+CHIP Decoder7Seg {
+    IN in[4];
+    OUT out[7];
+
+    PARTS:
+    // Put your code here:
+	// Use the following pins (w, notw, x, notx, y, noty, z, notz) for easier implementation
+	Not(in=in[3],out=notw);	// NOT(w)
+	Not(in=notw,out=w);		// w (==out[3])
+	Not(in=in[2],out=notx);	// NOT(x)
+	Not(in=notx,out=x);		// x (==out[2])
+	Not(in=in[1],out=noty);	// NOT(y)
+	Not(in=noty,out=y);		// y (==out[1])
+	Not(in=in[0],out=notz);	// NOT(z)
+	Not(in=notz,out=z);		// z (==out[0])
+
+	// out[6] - A
+	And(a=notw, b=notx, out=a1);
+	And(a=w, b=x, out=a2);
+	And(a=notx, b=noty, out=a3);
+	Or(a=w, b=notz, out=a4);
+	And(a=y, b=notz, out=a5);
+	And(a=notw, b=x, out=a6);
+	Or(a=a1, b=a2, out=a7);
+	And(a=a3, b=a4, out=a8);
+	And(a=a6, b=z, out=a9);
+	And(a=y, b=a7, out=a10);
+	Or(a=a5, b=a9, out=a11);
+	Or(a=a10, b=a8, out=a12);
+	Or(a=a12, b=a11, out=out[6]);
+
+	// out[5] - B
+	Xor(a=y, b=z, out=b1);
+	And(a=y, b=z, out=b2);
+	And(a=noty, b=notz, out=b3);
+	And(a=w, b=noty, out=b4);
+	And(a=w, b=b1, out=b5);
+	Or(a=b2, b=b3, out=b6);
+	Or(a=notw, b=b4, out=b7);
+	And(a=notw, b=b6, out=b8);
+	And(a=notx, b=b7, out=b9);
+	Or(a=b5, b=b8, out=b10);
+	Or(a=b10, b=b9, out=out[5]);
+
+	// out[4] - C
+	And(a=x, b=y, out=c1);
+	And(a=noty, b=notz, out=c2);
+	And(a=w, b=notz, out=c3);
+	And(a=x, b=noty, out=c4);
+	Or(a=c1, b=c2, out=c5);
+	Or(a=c3, b=z, out=c6);
+	And(a=c4, b=z, out=c7);
+	And(a=notw, b=c5, out=c8);
+	And(a=notx, b=c6, out=c9);
+	Or(a=c8, b=c9, out=c10);
+	Or(a=c10, b=c7, out=out[4]);
+
+	// out[3] - D
+	And(a=notx, b=notz, out=d1);
+	And(a=notx, b=y, out=d2);
+	Xor(a=y, b=z, out=d3);
+	Or(a=w, b=d1, out=d4);
+	And(a=x, b=d3, out=d5);
+	And(a=noty, b=d4, out=d6);
+	Or(a=d2, b=d5, out=d7);
+	Or(a=d6, b=d7, out=out[3]);
+
+	// out[2] - E
+	And(a=w, b=x, out=e1);
+	And(a=w, b=notx, out=e2);
+	And(a=notw, b=notz, out=e3);
+	And(a=notx, b=noty, out=e4);
+	Or(a=e2, b=e3, out=e5);
+	And(a=e4, b=notz, out=e6);
+	And(a=y, b=e5, out=e7);
+	Or(a=e1, b=e7, out=e8);
+	Or(a=e8, b=e6, out=out[2]);
+
+	// out[1] - F
+	And(a=w, b=y, out=f1);
+	And(a=w, b=notx, out=f2);
+	And(a=f2, b=z, out=f3);
+	And(a=notx, b=noty, out=f4);
+	And(a=f4, b=notz, out=f5);
+	Or(a=notw, b=f1, out=f6);
+	Or(a=f3, b=f5, out=f7);
+	And(a=x, b=f6, out=f8);
+	Or(a=f8, b=f7, out=out[1]);
+	
+
+	// out[0] - G
+	And(a=y, b=notz, out=g1);
+	Xor(a=x, b=y, out=g2);
+	And(a=notw, b=g1, out=g3);
+	And(a=notw, b=g2, out=g4);
+	Or(a=w, b=g4, out=g5);
+	Or(a=g5, b=g3, out=out[0]);
+}
